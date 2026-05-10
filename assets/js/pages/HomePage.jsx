@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react"
 import {useDispatch, useSelector} from "react-redux"
 import {logout} from "../features/auth/authSlice.js"
 import {getBoards, addBoard} from "../features/boards/boardsSlice"
+import {Link} from "react-router-dom"
 
 export default function HomePage() {
   const dispatch = useDispatch()
@@ -45,7 +46,7 @@ export default function HomePage() {
         <div>
           {boards.map((board) => (
             <div key={board.id}>
-              <h3>{board.title}</h3>
+              <Link to={`/boards/${board.id}`}><h3>{board.title}</h3></Link>
             </div>
           ))}
 

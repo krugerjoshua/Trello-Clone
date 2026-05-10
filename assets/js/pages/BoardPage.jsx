@@ -1,34 +1,61 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getBoard } from "../features/boards/BoardsSlice.js";
+import React, {useEffect, useState} from "react"
+import {useParams, Link} from "react-router-dom"
+import {useDispatch, useSelector} from "react-redux"
+import {getLists, addList} from "../features/lists/listsSlice"
+import ListColumn from "../components/ListColumn"
 
-const BoardPage = () => {
-  const dispatch = useDispatch();
-  const board = useSelector((state) => state.boards.currentBoard);
+export default function BoardPage() {
+  const {id} = useParams()
+  const dispatch = useDispatch()
+  const {lists, loading} = useSelector((state) => state.lists)
+
+  const [newListTitle, setNewListTitle] = useState("")
+  const [showForm, setShowForm] = useState(false)
 
   useEffect(() => {
-    dispatch(getBoard(1)); // hardcode first
-  }, [dispatch]);
+    dispatch(getLists(id))
+  }, [dispatch, id])
 
-  if (!board) return <div>Loading...</div>;
+  async function handleCreateList(e) {
+    e.preventDefault()
+    if (!newListTitle.trim()) return
+    const result = await dispatch(addList({boardId: id, title: newListTitle}))
+    if (result.meta.requestStatus === "fulfilled") {
+      setNewListTitle("")
+      setShowForm(false)
+    }
+  }
 
   return (
     <div>
-      <h1>{board.title}</h1>
+      <header>
+        <Link to="/">Back to boards</Link>
+      </header>
+      <main>
+        <div>
+          {lists.map((list) => (
+            <div key={list.id}>
+              <ListColumn key={list.id} list={list} />
+            </div>
+          ))}
 
-      <div style={{ display: "flex", gap: "16px" }}>
-        {board.lists.map((list) => (
-          <div key={list.id}>
-            <h3>{list.title}</h3>
-
-            {list.cards.map((card) => (
-              <div key={card.id}>{card.title}</div>
-            ))}
-          </div>
-        ))}
-      </div>
+          {showForm ? (
+            <form onSubmit={handleCreateList}>
+              <input
+                type="text"
+                placeholder="List title"
+                value={newListTitle}
+                onChange={(e) => setNewListTitle(e.target.value)}
+                autoFocus
+              />
+              <button type="submit" disabled={loading}>Add</button>
+              <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
+            </form>
+          ) : (
+            <button onClick={() => setShowForm(true)}>+ Add List</button>
+          )}
+        </div>
+      </main>
     </div>
-  );
-};
-
-export default BoardPage;
+  )
+}

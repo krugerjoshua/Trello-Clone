@@ -2,6 +2,8 @@ defmodule PhoenixTrello.Card.Cards do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:id, :title, :description, :position, :list_id, :inserted_at, :updated_at]}
+
   schema "cards" do
     field :title, :string
     field :description, :string

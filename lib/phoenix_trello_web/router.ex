@@ -21,11 +21,6 @@ defmodule PhoenixTrelloWeb.Router do
     plug PhoenixTrelloWeb.Api.AuthPlug
   end
 
-  scope "/", PhoenixTrelloWeb do
-    pipe_through :browser
-    get "/*path", PageController, :home
-  end
-
   scope "/api", PhoenixTrelloWeb do
     pipe_through :api
 
@@ -50,5 +45,10 @@ defmodule PhoenixTrelloWeb.Router do
       live_dashboard "/dashboard", metrics: PhoenixTrelloWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  scope "/", PhoenixTrelloWeb do
+    pipe_through :browser
+    get "/*path", PageController, :home
   end
 end

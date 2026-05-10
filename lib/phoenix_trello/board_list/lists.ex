@@ -2,6 +2,8 @@ defmodule PhoenixTrello.BoardList.Lists do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:id, :title, :position, :board_id, :inserted_at, :updated_at]}
+
   schema "lists" do
     field :title, :string
     field :position, :integer

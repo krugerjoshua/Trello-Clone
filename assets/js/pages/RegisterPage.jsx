@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import {useDispatch, useSelector} from "react-redux"
 import {useNavigate, Link} from "react-router-dom"
-import {register} from "../features/auth/authSlice"
+import {register} from "../features/auth/authSlice.js"
 
 export default function RegisterPage() {
   const dispatch = useDispatch()

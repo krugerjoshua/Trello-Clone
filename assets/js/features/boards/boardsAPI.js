@@ -35,3 +35,18 @@ export async function createBoard(token, title) {
 
   return data.data
 }
+
+export async function deleteBoard(token, id) {
+  const response = await fetch(`${BASE_URL}/boards/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to delete board")
+  }
+
+  return id
+}

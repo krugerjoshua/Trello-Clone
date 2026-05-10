@@ -35,6 +35,8 @@ defmodule PhoenixTrelloWeb.Router do
     resources "/boards", Api.BoardController, except: [:new, :edit]
     resources "/boards/:board_id/lists", Api.ListController, except: [:new, :edit]
     resources "/lists/:list_id/cards", Api.CardController, except: [:new, :edit]
+    delete "/lists/:id", Api.ListController, :delete
+    delete "/cards/:id", Api.CardController, :delete
   end
 
   if Application.compile_env(:phoenix_trello, :dev_routes) do

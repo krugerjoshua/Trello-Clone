@@ -35,3 +35,18 @@ export async function createCard(token, listId, title) {
 
   return data.data
 }
+
+export async function deleteCard(token, id) {
+  const response = await fetch(`${BASE_URL}/cards/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to delete card")
+  }
+
+  return id
+}

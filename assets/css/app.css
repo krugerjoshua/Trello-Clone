@@ -119,3 +119,11 @@
   .bg-blue-500 { background-color: #3b82f6 !important; }
   .bg-blue-600 { background-color: #2563eb !important; }
 }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #1f2937;
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+  transition: background-color 5000s ease-in-out 0s;
+}

@@ -3,6 +3,7 @@ import {useParams, Link} from "react-router-dom"
 import {useDispatch, useSelector} from "react-redux"
 import {getLists, addList} from "../features/lists/listsSlice"
 import ListColumn from "../components/ListColumn"
+import {getBoards} from "../features/boards/boardsSlice"
 
 export default function BoardPage() {
   const {id} = useParams()
@@ -12,9 +13,17 @@ export default function BoardPage() {
   const [newListTitle, setNewListTitle] = useState("")
   const [showForm, setShowForm] = useState(false)
 
+  const board = useSelector((state) =>
+    state.boards.boards.find((b) => b.id === parseInt(id))
+  )
+
   useEffect(() => {
     dispatch(getLists(id))
   }, [dispatch, id])
+
+  useEffect(() => {
+    dispatch(getBoards())
+  }, [dispatch])
 
   async function handleCreateList(e) {
     e.preventDefault()
@@ -28,8 +37,9 @@ export default function BoardPage() {
 
   return (
     <div className="min-h-screen bg-blue-700">
-      <header className="flex items-center justify-between px-6 py-3 bg-blue-800 shadow-md">
+      <header className="flex items-center justify-between px-6 py-3 bg-blue-800 shadow-md relative">
         <Link to="/" className="text-white text-sm hover:underline">← Back to boards</Link>
+<h1 className="text-white font-bold text-lg absolute left-1/2 -translate-x-1/2">{board?.title}</h1>
       </header>
 
       <main className="p-6 overflow-x-auto">

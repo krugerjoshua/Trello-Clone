@@ -27,32 +27,54 @@ export default function BoardPage() {
   }
 
   return (
-    <div>
-      <header>
-        <Link to="/">Back to boards</Link>
+    <div className="min-h-screen bg-blue-700">
+      <header className="flex items-center justify-between px-6 py-3 bg-blue-800 shadow-md">
+        <Link to="/" className="text-white text-sm hover:underline">← Back to boards</Link>
       </header>
-      <main>
-        <div>
+
+      <main className="p-6 overflow-x-auto">
+        <div className="flex gap-4 items-start">
           {lists.map((list) => (
-            <div key={list.id}>
-              <ListColumn key={list.id} list={list} />
-            </div>
+            <ListColumn key={list.id} list={list} />
           ))}
 
           {showForm ? (
-            <form onSubmit={handleCreateList}>
+            <form
+              onSubmit={handleCreateList}
+              className="bg-blue-900 rounded-lg p-3 flex flex-col gap-2 w-64 shrink-0"
+            >
               <input
                 type="text"
                 placeholder="List title"
                 value={newListTitle}
                 onChange={(e) => setNewListTitle(e.target.value)}
                 autoFocus
+                className="px-2 py-1 rounded text-sm bg-white text-gray-800 outline-none"
               />
-              <button type="submit" disabled={loading}>Add</button>
-              <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-blue-500 hover:bg-blue-400 text-white text-sm px-3 py-1 rounded"
+                >
+                  Add
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  className="text-blue-300 hover:text-white text-sm px-2 py-1"
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
           ) : (
-            <button onClick={() => setShowForm(true)}>+ Add List</button>
+            <button
+              onClick={() => setShowForm(true)}
+              className="bg-blue-600 bg-opacity-60 hover:bg-opacity-80 text-white text-sm px-4 py-3 rounded-lg w-64 shrink-0 text-left"
+            >
+              + Add List
+            </button>
           )}
         </div>
       </main>

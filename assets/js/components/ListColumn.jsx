@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCards, addCard, removeCard } from "../features/cards/cardsSlice";
+import {
+    getCards,
+    addCard,
+    removeCard,
+    moveCard,
+    reorderCards,
+    editCard,
+} from "../features/cards/cardsSlice";
 import { removeList } from "../features/lists/listsSlice";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 
@@ -12,6 +19,8 @@ export default function ListColumn({ list }) {
 
     const [newCardTitle, setNewCardTitle] = useState("");
     const [showForm, setShowForm] = useState(false);
+    const [editingCardId, setEditingCardId] = useState(null);
+    const [editingCardTitle, setEditingCardTitle] = useState("");
 
     useEffect(() => {
         dispatch(getCards(list.id));
@@ -35,6 +44,23 @@ export default function ListColumn({ list }) {
 
     function handleDeleteCard(id) {
         dispatch(removeCard(id));
+    }
+
+    function handleEditStart(card) {
+        setEditingCardId(card.id);
+        setEditingCardTitle(card.title);
+    }
+
+    async function handleEditSave(card) {
+        if (editingCardTitle.trim() && editingCardTitle !== card.title) {
+            await dispatch(editCard({ id: card.id, title: editingCardTitle }));
+        }
+        setEditingCardId(null);
+    }
+
+    function handleEditKeyDown(e, card) {
+        if (e.key === "Enter") handleEditSave(card);
+        if (e.key === "Escape") setEditingCardId(null);
     }
 
     return (
@@ -69,15 +95,46 @@ export default function ListColumn({ list }) {
                                         {...provided.dragHandleProps}
                                         className="bg-white rounded shadow-sm px-3 py-2 text-sm text-gray-800 cursor-pointer hover:bg-gray-50 flex items-center justify-between group"
                                     >
-                                        <p>{card.title}</p>
-                                        <button
-                                            onClick={() =>
-                                                handleDeleteCard(card.id)
-                                            }
-                                            className="text-gray-300 hover:text-red-500 text-xs opacity-0 group-hover:opacity-100"
-                                        >
-                                            ✕
-                                        </button>
+                                        {editingCardId === card.id ? (
+                                            <input
+                                                type="text"
+                                                value={editingCardTitle}
+                                                onChange={(e) =>
+                                                    setEditingCardTitle(
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                onBlur={() =>
+                                                    handleEditSave(card)
+                                                }
+                                                onKeyDown={(e) =>
+                                                    handleEditKeyDown(e, card)
+                                                }
+                                                autoFocus
+                                                className="w-full text-sm text-gray-800 outline-none border border-blue-400 rounded px-1"
+                                            />
+                                        ) : (
+                                            <>
+                                                <p
+                                                    onClick={() =>
+                                                        handleEditStart(card)
+                                                    }
+                                                    className="flex-1 cursor-text"
+                                                >
+                                                    {card.title}
+                                                </p>
+                                                <button
+                                                    onClick={() =>
+                                                        handleDeleteCard(
+                                                            card.id,
+                                                        )
+                                                    }
+                                                    className="text-gray-300 hover:text-red-500 text-xs opacity-0 group-hover:opacity-100"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </>
+                                        )}
                                     </div>
                                 )}
                             </Draggable>

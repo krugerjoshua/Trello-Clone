@@ -10,7 +10,7 @@ import {
 } from "../features/cards/cardsSlice";
 import { removeList } from "../features/lists/listsSlice";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
-import CardModal from "./CardModal";
+import CardModal from "./cardModal";
 
 export default function ListColumn({ list }) {
     const dispatch = useDispatch();

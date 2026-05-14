@@ -10,6 +10,7 @@ import {
 } from "../features/cards/cardsSlice";
 import { removeList } from "../features/lists/listsSlice";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
+import CardModal from "./CardModal";
 
 export default function ListColumn({ list }) {
     const dispatch = useDispatch();
@@ -21,6 +22,7 @@ export default function ListColumn({ list }) {
     const [showForm, setShowForm] = useState(false);
     const [editingCardId, setEditingCardId] = useState(null);
     const [editingCardTitle, setEditingCardTitle] = useState("");
+    const [selectedCard, setSelectedCard] = useState(null);
 
     useEffect(() => {
         dispatch(getCards(list.id));
@@ -117,9 +119,9 @@ export default function ListColumn({ list }) {
                                             <>
                                                 <p
                                                     onClick={() =>
-                                                        handleEditStart(card)
+                                                        setSelectedCard(card)
                                                     }
-                                                    className="flex-1 cursor-text"
+                                                    className="flex-1 cursor-pointer"
                                                 >
                                                     {card.title}
                                                 </p>
@@ -180,6 +182,15 @@ export default function ListColumn({ list }) {
                 >
                     + Add Card
                 </button>
+            )}
+            {selectedCard && (
+                <CardModal
+                    card={
+                        cards.find((c) => c.id === selectedCard.id) ||
+                        selectedCard
+                    }
+                    onClose={() => setSelectedCard(null)}
+                />
             )}
         </div>
     );

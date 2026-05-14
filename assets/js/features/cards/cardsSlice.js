@@ -64,6 +64,18 @@ export const editCard = createAsyncThunk(
     },
 );
 
+export const updateCardDescription = createAsyncThunk(
+    "cards/updateCardDescription",
+    async ({ id, description }, { rejectWithValue, getState }) => {
+        try {
+            const token = getState().auth.token;
+            return await updateCard(token, id, { description });
+        } catch (err) {
+            return rejectWithValue(err);
+        }
+    },
+);
+
 const cardsSlice = createSlice({
     name: "cards",
     initialState: {
@@ -98,6 +110,12 @@ const cardsSlice = createSlice({
                 );
             })
             .addCase(editCard.fulfilled, (state, action) => {
+                const index = state.cards.findIndex(
+                    (c) => c.id === action.payload.id,
+                );
+                if (index !== -1) state.cards[index] = action.payload;
+            })
+            .addCase(updateCardDescription.fulfilled, (state, action) => {
                 const index = state.cards.findIndex(
                     (c) => c.id === action.payload.id,
                 );

@@ -52,4 +52,4 @@ COPY --from=build --chown=nobody:root /app/_build/${MIX_ENV}/rel/phoenix_trello 
 
 USER nobody
 
-CMD ["/app/bin/server"]
+CMD /app/bin/migrate && /app/bin/server

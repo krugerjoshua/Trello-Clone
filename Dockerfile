@@ -50,6 +50,8 @@ ENV MIX_ENV="prod"
 
 COPY --from=build --chown=nobody:root /app/_build/${MIX_ENV}/rel/phoenix_trello ./
 
+RUN chmod +x /app/bin/migrate /app/bin/server /app/bin/phoenix_trello
+
 USER nobody
 
 CMD /app/bin/migrate && /app/bin/server

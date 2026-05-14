@@ -83,7 +83,11 @@ const cardsSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getCards.fulfilled, (state, action) => {
-                state.cards = action.payload;
+                const newCards = action.payload;
+                const otherCards = state.cards.filter(
+                    (c) => !newCards.some((nc) => nc.list_id === c.list_id),
+                );
+                state.cards = [...otherCards, ...newCards];
             })
             .addCase(addCard.fulfilled, (state, action) => {
                 state.cards.push(action.payload);

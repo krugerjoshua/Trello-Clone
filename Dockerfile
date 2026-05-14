@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.19.5-erlang-28.4.2-debian-bookworm-20250317-slim AS build
+FROM hexpm/elixir:1.19.5-erlang-27.3.4-debian-bookworm-20250317-slim AS build
 
 RUN apt-get update -y && apt-get install -y build-essential git curl \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
@@ -32,7 +32,7 @@ COPY config/runtime.exs config/
 COPY rel rel
 RUN mix release
 
-FROM debian:bookworm-20250317-slim AS app
+FROM debian:bookworm-slim AS app
 
 RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*

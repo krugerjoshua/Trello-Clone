@@ -15,6 +15,7 @@ export default function HomePage() {
 
     const [newBoardTitle, setNewBoardTitle] = useState("");
     const [showForm, setShowForm] = useState(false);
+    const [newBoardColor, setNewBoardColor] = useState("#0079BF");
 
     useEffect(() => {
         dispatch(getBoards());
@@ -34,9 +35,17 @@ export default function HomePage() {
         }
     }
 
-    function handleDeleteBoard(e, id) {
+    async function handleCreateBoard(e) {
         e.preventDefault();
-        dispatch(removeBoard(id));
+        if (!newBoardTitle.trim()) return;
+        const result = await dispatch(
+            addBoard({ title: newBoardTitle, color: newBoardColor }),
+        );
+        if (result.meta.requestStatus === "fulfilled") {
+            setNewBoardTitle("");
+            setNewBoardColor("#0079BF");
+            setShowForm(false);
+        }
     }
 
     const email = user?.email || token ? "user" : "";
@@ -65,8 +74,12 @@ export default function HomePage() {
                     {boards.map((board) => (
                         <div key={board.id} className="relative group">
                             <Link
+                                key={board.id}
                                 to={`/boards/${board.id}`}
-                                className="w-48 h-28 bg-blue-500 hover:bg-red-400 rounded-lg p-4 flex items-end cursor-pointer block"
+                                style={{
+                                    backgroundColor: board.color || "#0079BF",
+                                }}
+                                className="w-48 h-28 rounded-lg p-4 flex items-end cursor-pointer hover:brightness-110"
                             >
                                 <h3 className="text-white font-semibold">
                                     {board.title}
@@ -84,7 +97,7 @@ export default function HomePage() {
                     {showForm ? (
                         <form
                             onSubmit={handleCreateBoard}
-                            className="w-48 h-28 bg-blue-900 rounded-lg p-3 flex flex-col gap-2"
+                            className="bg-blue-900 rounded-lg p-3 flex flex-col gap-2 w-64"
                         >
                             <input
                                 type="text"
@@ -96,6 +109,26 @@ export default function HomePage() {
                                 autoFocus
                                 className="px-2 py-1 rounded text-sm bg-white text-gray-800 outline-none"
                             />
+                            <div className="flex gap-1 flex-wrap">
+                                {[
+                                    "#0079BF",
+                                    "#D29034",
+                                    "#519839",
+                                    "#B04632",
+                                    "#89609E",
+                                    "#CD5A91",
+                                    "#4BBF6B",
+                                    "#00AECC",
+                                ].map((color) => (
+                                    <button
+                                        key={color}
+                                        type="button"
+                                        onClick={() => setNewBoardColor(color)}
+                                        style={{ backgroundColor: color }}
+                                        className={`w-6 h-6 rounded ${newBoardColor === color ? "ring-2 ring-white ring-offset-1" : ""}`}
+                                    />
+                                ))}
+                            </div>
                             <div className="flex gap-2">
                                 <button
                                     type="submit"

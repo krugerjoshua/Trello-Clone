@@ -15,10 +15,10 @@ export const getBoards = createAsyncThunk(
 
 export const addBoard = createAsyncThunk(
     "boards/addBoard",
-    async (title, { rejectWithValue, getState }) => {
+    async ({ title, color }, { rejectWithValue, getState }) => {
         try {
             const token = getState().auth.token;
-            return await createBoard(token, title);
+            return await createBoard(token, { title, color });
         } catch (err) {
             return rejectWithValue(err);
         }

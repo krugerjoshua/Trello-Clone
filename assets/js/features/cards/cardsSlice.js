@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchCards, createCard, deleteCard } from "./cardsAPI";
+import { fetchCards, createCard, deleteCard, updateCard } from "./cardsAPI";
 
 export const getCards = createAsyncThunk(
     "cards/getCards",
@@ -37,6 +37,21 @@ export const removeCard = createAsyncThunk(
     },
 );
 
+export const moveCard = createAsyncThunk(
+    "cards/moveCard",
+    async ({ cardId, listId, position }, { rejectWithValue, getState }) => {
+        try {
+            const token = getState().auth.token;
+            return await updateCard(token, cardId, {
+                list_id: listId,
+                position,
+            });
+        } catch (err) {
+            return rejectWithValue(err);
+        }
+    },
+);
+
 const cardsSlice = createSlice({
     name: "cards",
     initialState: {
@@ -44,7 +59,15 @@ const cardsSlice = createSlice({
         loading: false,
         errors: null,
     },
-    reducers: {},
+    reducers: {
+        reorderCards(state, action) {
+            const { cardId, sourceListId, destListId, sourceIndex, destIndex } =
+                action.payload;
+            const card = state.cards.find((c) => c.id === cardId);
+            if (!card) return;
+            card.list_id = destListId;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getCards.fulfilled, (state, action) => {
@@ -62,3 +85,4 @@ const cardsSlice = createSlice({
 });
 
 export default cardsSlice.reducer;
+export const {reorderCards} = cardsSlice.actions

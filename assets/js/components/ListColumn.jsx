@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCards, addCard, removeCard } from "../features/cards/cardsSlice";
 import { removeList } from "../features/lists/listsSlice";
+import { Droppable, Draggable } from "@hello-pangea/dnd";
 
 export default function ListColumn({ list }) {
     const dispatch = useDispatch();
@@ -48,22 +49,43 @@ export default function ListColumn({ list }) {
                 </button>
             </div>
 
-            <div className="flex flex-col gap-2">
-                {cards.map((card) => (
+            <Droppable droppableId={String(list.id)}>
+                {(provided) => (
                     <div
-                        key={card.id}
-                        className="bg-white rounded shadow-sm px-3 py-2 text-sm text-gray-800 cursor-pointer hover:bg-gray-50 flex items-center justify-between group"
+                        className="flex flex-col gap-2"
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
                     >
-                        <p>{card.title}</p>
-                        <button
-                            onClick={() => handleDeleteCard(card.id)}
-                            className="text-gray-300 hover:text-red-500 text-xs opacity-0 group-hover:opacity-100"
-                        >
-                            ✕
-                        </button>
+                        {cards.map((card, index) => (
+                            <Draggable
+                                key={String(card.id)}
+                                draggableId={String(card.id)}
+                                index={index}
+                            >
+                                {(provided) => (
+                                    <div
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        className="bg-white rounded shadow-sm px-3 py-2 text-sm text-gray-800 cursor-pointer hover:bg-gray-50 flex items-center justify-between group"
+                                    >
+                                        <p>{card.title}</p>
+                                        <button
+                                            onClick={() =>
+                                                handleDeleteCard(card.id)
+                                            }
+                                            className="text-gray-300 hover:text-red-500 text-xs opacity-0 group-hover:opacity-100"
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                )}
+                            </Draggable>
+                        ))}
+                        {provided.placeholder}
                     </div>
-                ))}
-            </div>
+                )}
+            </Droppable>
 
             {showForm ? (
                 <form

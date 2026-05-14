@@ -1,0 +1,24 @@
+# Dependencies
+/deps
+/node_modules
+/assets/node_modules
+
+# Build artifacts
+/_build
+/priv/static/assets
+
+# Dev/test config
+/config/dev.secret.exs
+/config/test.secret.exs
+
+# Logs and temp files
+*.log
+/tmp
+
+# Git
+/.git
+/.gitignore
+
+# Docker
+Dockerfile
+.dockerignore

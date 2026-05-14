@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.19.5-erlang-27.3.4-debian-bookworm-20250317-slim AS build
+FROM elixir:1.19.5-slim AS build
 
 RUN apt-get update -y && apt-get install -y build-essential git curl \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*

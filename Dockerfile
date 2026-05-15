@@ -1,4 +1,4 @@
-FROM elixir:1.19.5-slim AS build
+FROM elixir:1.19.5-slim
 
 RUN apt-get update -y && apt-get install -y build-essential git curl \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
@@ -16,6 +16,7 @@ COPY mix.exs mix.lock ./
 RUN mix deps.get --only $MIX_ENV
 RUN mkdir config
 COPY config/config.exs config/${MIX_ENV}.exs config/
+
 RUN mix deps.compile
 
 COPY assets/package.json assets/package-lock.json ./assets/
@@ -32,26 +33,10 @@ COPY config/runtime.exs config/
 COPY rel rel
 RUN mix release
 
-FROM debian:bookworm-slim AS app
+ENV PHX_SERVER=true
 
-RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates \
-    && apt-get clean && rm -f /var/lib/apt/lists/*_*
+RUN chmod +x /app/_build/prod/rel/phoenix_trello/bin/migrate \
+    && chmod +x /app/_build/prod/rel/phoenix_trello/bin/server \
+    && chmod +x /app/_build/prod/rel/phoenix_trello/bin/phoenix_trello
 
-RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
-
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
-
-WORKDIR /app
-RUN chown nobody /app
-
-ENV MIX_ENV="prod"
-
-COPY --from=build --chown=nobody:root /app/_build/${MIX_ENV}/rel/phoenix_trello ./
-
-RUN chmod +x /app/bin/migrate /app/bin/server /app/bin/phoenix_trello
-
-USER nobody
-
-CMD /app/bin/migrate && /app/bin/server
+CMD /app/_build/prod/rel/phoenix_trello/bin/migrate && /app/_build/prod/rel/phoenix_trello/bin/server

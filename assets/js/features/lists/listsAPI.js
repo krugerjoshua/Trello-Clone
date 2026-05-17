@@ -50,3 +50,22 @@ export async function deleteList(token, id) {
 
     return id;
 }
+
+export async function updateList(token, id, attrs) {
+    const response = await fetch(`${BASE_URL}/lists/${id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ list: attrs }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw data.errors;
+    }
+
+    return data.data;
+}

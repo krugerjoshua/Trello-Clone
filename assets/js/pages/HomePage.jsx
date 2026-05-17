@@ -25,28 +25,23 @@ export default function HomePage() {
         dispatch(logout());
     }
 
-    async function handleCreateBoard(e) {
-        e.preventDefault();
-        if (!newBoardTitle.trim()) return;
-        const result = await dispatch(addBoard(newBoardTitle));
-        if (result.meta.requestStatus === "fulfilled") {
-            setNewBoardTitle("");
-            setShowForm(false);
-        }
+async function handleCreateBoard(e) {
+    e.preventDefault();
+    if (!newBoardTitle.trim()) return;
+    const result = await dispatch(
+        addBoard({ title: newBoardTitle, color: newBoardColor }),
+    );
+    if (result.meta.requestStatus === "fulfilled") {
+        setNewBoardTitle("");
+        setNewBoardColor("#0079BF");
+        setShowForm(false);
     }
+}
 
-    async function handleCreateBoard(e) {
-        e.preventDefault();
-        if (!newBoardTitle.trim()) return;
-        const result = await dispatch(
-            addBoard({ title: newBoardTitle, color: newBoardColor }),
-        );
-        if (result.meta.requestStatus === "fulfilled") {
-            setNewBoardTitle("");
-            setNewBoardColor("#0079BF");
-            setShowForm(false);
-        }
-    }
+function handleDeleteBoard(e, id) {
+    e.preventDefault();
+    dispatch(removeBoard(id));
+}
 
     const email = user?.email || token ? "user" : "";
 

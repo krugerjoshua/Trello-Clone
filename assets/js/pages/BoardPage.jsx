@@ -19,6 +19,8 @@ export default function BoardPage() {
         state.boards.boards.find((b) => b.id === parseInt(id)),
     );
 
+    const cardsLoading = useSelector((state) => state.cards.loading)
+
     useEffect(() => {
         dispatch(getLists(id));
     }, [dispatch, id]);
@@ -84,55 +86,59 @@ export default function BoardPage() {
             </header>
 
             <main className="p-6 overflow-x-auto">
-                <DragDropContext onDragEnd={handleDragEnd}>
-                    <div className="flex gap-4 items-start">
-                        {lists.map((list) => (
-                            <ListColumn key={list.id} list={list} />
-                        ))}
+    {loading ? (
+        <div className="flex items-center justify-center h-64">
+            <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+        </div>
+    ) : (
+        <DragDropContext onDragEnd={handleDragEnd}>
+            <div className="flex gap-4 items-start">
+                {lists.map((list) => (
+                    <ListColumn key={list.id} list={list} />
+                ))}
 
-                        {showForm ? (
-                            <form
-                                onSubmit={handleCreateList}
-                                className="bg-blue-900 rounded-lg p-3 flex flex-col gap-2 w-64 shrink-0"
-                            >
-                                <input
-                                    type="text"
-                                    placeholder="List title"
-                                    value={newListTitle}
-                                    onChange={(e) =>
-                                        setNewListTitle(e.target.value)
-                                    }
-                                    autoFocus
-                                    className="px-2 py-1 rounded text-sm bg-white text-gray-800 outline-none"
-                                />
-                                <div className="flex gap-2">
-                                    <button
-                                        type="submit"
-                                        disabled={loading}
-                                        className="bg-blue-500 hover:bg-blue-400 text-white text-sm px-3 py-1 rounded"
-                                    >
-                                        Add
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowForm(false)}
-                                        className="text-blue-300 hover:text-white text-sm px-2 py-1"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </form>
-                        ) : (
+                {showForm ? (
+                    <form
+                        onSubmit={handleCreateList}
+                        className="bg-blue-900 rounded-lg p-3 flex flex-col gap-2 w-64 shrink-0"
+                    >
+                        <input
+                            type="text"
+                            placeholder="List title"
+                            value={newListTitle}
+                            onChange={(e) => setNewListTitle(e.target.value)}
+                            autoFocus
+                            className="px-2 py-1 rounded text-sm bg-white text-gray-800 outline-none"
+                        />
+                        <div className="flex gap-2">
                             <button
-                                onClick={() => setShowForm(true)}
-                                className="bg-blue-600 bg-opacity-60 hover:bg-opacity-80 text-white text-sm px-4 py-3 rounded-lg w-64 shrink-0 text-left"
+                                type="submit"
+                                disabled={loading}
+                                className="bg-blue-500 hover:bg-blue-400 text-white text-sm px-3 py-1 rounded"
                             >
-                                + Add List
+                                Add
                             </button>
-                        )}
-                    </div>
-                </DragDropContext>
-            </main>
+                            <button
+                                type="button"
+                                onClick={() => setShowForm(false)}
+                                className="text-blue-300 hover:text-white text-sm px-2 py-1"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                ) : (
+                    <button
+                        onClick={() => setShowForm(true)}
+                        className="bg-blue-600 bg-opacity-60 hover:bg-opacity-80 text-white text-sm px-4 py-3 rounded-lg w-64 shrink-0 text-left"
+                    >
+                        + Add List
+                    </button>
+                )}
+            </div>
+        </DragDropContext>
+    )}
+</main>
         </div>
     );
 }

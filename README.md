@@ -1,18 +1,44 @@
-# PhoenixTrello
+# Trello Clone
+A Trello clone built with Elixir/Phoenix and React/Redux.
 
-To start your Phoenix server:
+**Live Demo:** [trello-clone-fus7.onrender.com](https://trello-clone-fus7.onrender.com)
 
-* Run `mix setup` to install and setup dependencies
-* Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+---
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+## What it does
+- User can register or login with a username and password
+- Create boards with a custom name and background color
+- Able to add lists and cards to each board
+- User can drag and drop cards between files
+- User can drag and drop lists to reorder them
+- Click on a card to add a description
+- Able to boards, lists and cards
+- Responsive design to work on desktop and mobile devices
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+---
 
-## Learn more
+## Built With
+**Backend**
+- Elixir / Phoenix
+- PostgreSQL
+- Ecto (database queries)
+**Frontend**
+- React
+- Redux Toolkit
+- React Router
+- Tailwind CSS
+- @hello-pangea/dnd (drag and drop)
+**Deployed on**
+- Render (web service + database)
+- Docker
 
-* Official website: https://www.phoenixframework.org/
-* Guides: https://hexdocs.pm/phoenix/overview.html
-* Docs: https://hexdocs.pm/phoenix
-* Forum: https://elixirforum.com/c/phoenix-forum
-* Source: https://github.com/phoenixframework/phoenix
+---
+
+## What I learned
+ 
+- Building a REST API with Elixir and Phoenix
+- Token-based authentication
+- Redux Toolkit slices and async thunks
+- Drag and drop with @hello-pangea/dnd
+- Deploying with Docker on Render
+- Writing database migrations with Ecto
